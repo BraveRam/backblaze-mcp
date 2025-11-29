@@ -1,0 +1,25 @@
+# Development files
+.env
+.env.*
+*.log
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+
+# Source files (publish only compiled dist/)
+src/
+tsconfig.json
+
+# Lock files (users should generate their own)
+bun.lock
+package-lock.json
+yarn.lock
+
+# Git
+.git/
+.gitignore
