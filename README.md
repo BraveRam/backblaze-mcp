@@ -7,11 +7,11 @@ A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that pr
 
 ## Features
 
-- 🪣 **Bucket Management** - Create, delete, list, and update buckets
-- 📄 **File Operations** - Upload, list, hide, and delete files
-- 📦 **Large File Support** - Multipart uploads for files >100MB
-- 🔑 **Key Management** - Manage application keys and permissions
-- ⚡ **Simple Setup** - Just configure your B2 credentials in MCP config
+- **Bucket Management** - Create, delete, list, and update buckets
+- **File Operations** - Upload, list, hide, and delete files
+- **Large File Support** - Multipart uploads for files >100MB
+- **Key Management** - Manage application keys and permissions
+- **Simple Setup** - Just configure your B2 credentials in MCP config
 
 ## Configuration
 
@@ -62,7 +62,7 @@ Add this configuration to your MCP client:
 
 ## Available Tools
 
-### 🪣 Bucket Management (5 tools)
+### Bucket Management (5 tools)
 
 - `createBucket` - Create a new bucket
 - `deleteBucket` - Delete a bucket
@@ -70,7 +70,7 @@ Add this configuration to your MCP client:
 - `getBucket` - Get bucket info
 - `updateBucket` - Change bucket type (public/private)
 
-### 📄 File Operations (7 tools)
+### File Operations (7 tools)
 
 - `getUploadUrl` - Get upload URL
 - `uploadFile` - Upload a file (base64-encoded)
@@ -81,7 +81,7 @@ Add this configuration to your MCP client:
 - `deleteFileVersion` - Delete a file version
 - `getDownloadAuthorization` - Get download auth token
 
-### 📦 Large File Operations (5 tools)
+### Large File Operations (5 tools)
 
 For files >100MB:
 
@@ -92,7 +92,7 @@ For files >100MB:
 - `finishLargeFile` - Complete the upload
 - `cancelLargeFile` - Cancel the upload
 
-### 🔑 Key Management (3 tools)
+### Key Management (3 tools)
 
 - `createKey` - Create application keys
 - `deleteKey` - Delete a key
@@ -153,9 +153,3 @@ File uploads use base64 encoding:
 ## License
 
 MIT
-
-## Links
-
-- [npm Package](https://www.npmjs.com/package/backblaze-mcp)
-- [Backblaze B2 Documentation](https://www.backblaze.com/b2/docs/)
-- [Model Context Protocol](https://modelcontextprotocol.io/)
