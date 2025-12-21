@@ -147,7 +147,7 @@ File uploads use base64 encoding:
 
 ## Built With
 
-- [backblaze-b2](https://www.npmjs.com/package/backblaze-b2) - Official Backblaze B2 client
+- [backblaze-b2](https://www.npmjs.com/package/backblaze-b2) - Backblaze B2 client
 - [@modelcontextprotocol/sdk](https://www.npmjs.com/package/@modelcontextprotocol/sdk) - MCP SDK
 
 ## License
