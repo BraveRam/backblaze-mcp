@@ -10,6 +10,9 @@ const server = new McpServer({
     version: '1.0.0'
 });
 
+const apiKey = process.env.B2_APPLICATION_KEY_ID;
+const apiSecret = process.env.B2_APPLICATION_KEY;
+
 // Global B2 client instance
 let b2Client: B2 | null = null;
 
@@ -81,12 +84,12 @@ server.registerTool(
             bucketName: z.string().describe('Name of the bucket to create'),
             bucketType: z.enum(['allPublic', 'allPrivate']).describe('Bucket type: allPublic or allPrivate')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             bucketId: z.string(),
             bucketName: z.string(),
             bucketType: z.string(),
             accountId: z.string()
-        }
+        })
     },
     async ({ bucketName, bucketType }) => {
         try {
@@ -110,10 +113,10 @@ server.registerTool(
         inputSchema: {
             bucketId: z.string().describe('ID of the bucket to delete')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             bucketId: z.string(),
             bucketName: z.string()
-        }
+        })
     },
     async ({ bucketId }) => {
         try {
@@ -132,13 +135,13 @@ server.registerTool(
         title: 'List Buckets',
         description: 'List all B2 buckets in the account',
         inputSchema: {},
-        outputSchema: {
-            buckets: z.array(z.object({
+        outputSchema: z.looseObject({
+            buckets: z.array(z.looseObject({
                 bucketId: z.string(),
                 bucketName: z.string(),
                 bucketType: z.string()
             }))
-        }
+        })
     },
     async () => {
         try {
@@ -164,11 +167,11 @@ server.registerTool(
             bucketName: z.string().describe('Name of the bucket to retrieve'),
             bucketId: z.string().optional().describe('Optional bucket ID for faster lookup')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             bucketId: z.string(),
             bucketName: z.string(),
             bucketType: z.string()
-        }
+        })
     },
     async ({ bucketName, bucketId }) => {
         try {
@@ -190,11 +193,11 @@ server.registerTool(
             bucketId: z.string().describe('ID of the bucket to update'),
             bucketType: z.enum(['allPublic', 'allPrivate']).describe('New bucket type')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             bucketId: z.string(),
             bucketName: z.string(),
             bucketType: z.string()
-        }
+        })
     },
     async ({ bucketId, bucketType }) => {
         try {
@@ -217,10 +220,10 @@ server.registerTool(
         inputSchema: {
             bucketId: z.string().describe('ID of the bucket to upload to')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             uploadUrl: z.string(),
             authorizationToken: z.string()
-        }
+        })
     },
     async ({ bucketId }) => {
         const b2 = await getB2Client();
@@ -242,11 +245,11 @@ server.registerTool(
             mime: z.string().optional().describe('MIME type (default: b2/x-auto)'),
             info: z.record(z.string(), z.string()).optional().describe('Custom file info headers (max 10)')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string(),
             contentLength: z.number()
-        }
+        })
     },
     async ({ uploadUrl, uploadAuthToken, fileName, data, mime, info }) => {
         const b2 = await getB2Client();
@@ -275,13 +278,13 @@ server.registerTool(
             delimiter: z.string().optional().describe('Delimiter for folder-like listing'),
             prefix: z.string().optional().describe('File name prefix filter')
         },
-        outputSchema: {
-            files: z.array(z.object({
+        outputSchema: z.looseObject({
+            files: z.array(z.looseObject({
                 fileId: z.string(),
                 fileName: z.string(),
                 contentLength: z.number()
             }))
-        }
+        })
     },
     async ({ bucketId, startFileName, maxFileCount, delimiter, prefix }) => {
         const b2 = await getB2Client();
@@ -308,12 +311,12 @@ server.registerTool(
             startFileId: z.string().optional().describe('File ID to start listing from'),
             maxFileCount: z.number().optional().describe('Maximum number of files to return')
         },
-        outputSchema: {
-            files: z.array(z.object({
+        outputSchema: z.looseObject({
+            files: z.array(z.looseObject({
                 fileId: z.string(),
                 fileName: z.string()
             }))
-        }
+        })
     },
     async ({ bucketId, startFileName, startFileId, maxFileCount }) => {
         const b2 = await getB2Client();
@@ -337,10 +340,10 @@ server.registerTool(
             bucketId: z.string().describe('Bucket ID containing the file'),
             fileName: z.string().describe('Name of the file to hide')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string()
-        }
+        })
     },
     async ({ bucketId, fileName }) => {
         const b2 = await getB2Client();
@@ -357,11 +360,11 @@ server.registerTool(
         inputSchema: {
             fileId: z.string().describe('ID of the file')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string(),
             contentLength: z.number()
-        }
+        })
     },
     async ({ fileId }) => {
         const b2 = await getB2Client();
@@ -379,10 +382,10 @@ server.registerTool(
             fileId: z.string().describe('ID of the file version to delete'),
             fileName: z.string().describe('Name of the file')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string()
-        }
+        })
     },
     async ({ fileId, fileName }) => {
         const b2 = await getB2Client();
@@ -401,9 +404,9 @@ server.registerTool(
             fileNamePrefix: z.string().describe('File name prefix to authorize'),
             validDurationInSeconds: z.number().min(0).max(604800).describe('Token validity duration (0-604800 seconds)')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             authorizationToken: z.string()
-        }
+        })
     },
     async ({ bucketId, fileNamePrefix, validDurationInSeconds }) => {
         const b2 = await getB2Client();
@@ -427,10 +430,10 @@ server.registerTool(
             bucketId: z.string().describe('Bucket ID to upload to'),
             fileName: z.string().describe('Name of the file')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string()
-        }
+        })
     },
     async ({ bucketId, fileName }) => {
         const b2 = await getB2Client();
@@ -447,10 +450,10 @@ server.registerTool(
         inputSchema: {
             fileId: z.string().describe('File ID from startLargeFile')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             uploadUrl: z.string(),
             authorizationToken: z.string()
-        }
+        })
     },
     async ({ fileId }) => {
         const b2 = await getB2Client();
@@ -470,11 +473,11 @@ server.registerTool(
             uploadAuthToken: z.string().describe('Authorization token from getUploadPartUrl'),
             data: z.string().describe('Base64-encoded part data')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             partNumber: z.number(),
             contentLength: z.number(),
             contentSha1: z.string()
-        }
+        })
     },
     async ({ partNumber, uploadUrl, uploadAuthToken, data }) => {
         const b2 = await getB2Client();
@@ -499,12 +502,12 @@ server.registerTool(
             startPartNumber: z.number().optional().describe('Part number to start listing from'),
             maxPartCount: z.number().max(100).optional().describe('Maximum parts to return (max 100)')
         },
-        outputSchema: {
-            parts: z.array(z.object({
+        outputSchema: z.looseObject({
+            parts: z.array(z.looseObject({
                 partNumber: z.number(),
                 contentLength: z.number()
             }))
-        }
+        })
     },
     async ({ fileId, startPartNumber, maxPartCount }) => {
         const b2 = await getB2Client();
@@ -527,11 +530,11 @@ server.registerTool(
             fileId: z.string().describe('File ID from startLargeFile'),
             partSha1Array: z.array(z.string()).describe('Array of SHA1 hashes for each part in order')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string(),
             contentLength: z.number()
-        }
+        })
     },
     async ({ fileId, partSha1Array }) => {
         const b2 = await getB2Client();
@@ -548,10 +551,10 @@ server.registerTool(
         inputSchema: {
             fileId: z.string().describe('File ID from startLargeFile')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             fileId: z.string(),
             fileName: z.string()
-        }
+        })
     },
     async ({ fileId }) => {
         const b2 = await getB2Client();
@@ -574,11 +577,11 @@ server.registerTool(
             bucketId: z.string().optional().describe('Restrict key to specific bucket'),
             namePrefix: z.string().optional().describe('Restrict key to files with this prefix')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             applicationKeyId: z.string(),
             applicationKey: z.string(),
             keyName: z.string()
-        }
+        })
     },
     async ({ capabilities, keyName, validDurationInSeconds, bucketId, namePrefix }) => {
         const b2 = await getB2Client();
@@ -601,10 +604,10 @@ server.registerTool(
         inputSchema: {
             applicationKeyId: z.string().describe('ID of the key to delete')
         },
-        outputSchema: {
+        outputSchema: z.looseObject({
             applicationKeyId: z.string(),
             keyName: z.string()
-        }
+        })
     },
     async ({ applicationKeyId }) => {
         const b2 = await getB2Client();
@@ -622,13 +625,13 @@ server.registerTool(
             maxKeyCount: z.number().optional().describe('Maximum number of keys to return'),
             startApplicationKeyId: z.string().optional().describe('Key ID to start listing from')
         },
-        outputSchema: {
-            keys: z.array(z.object({
+        outputSchema: z.looseObject({
+            keys: z.array(z.looseObject({
                 applicationKeyId: z.string(),
                 keyName: z.string(),
                 capabilities: z.array(z.string())
             }))
-        }
+        })
     },
     async ({ maxKeyCount, startApplicationKeyId }) => {
         const b2 = await getB2Client();
