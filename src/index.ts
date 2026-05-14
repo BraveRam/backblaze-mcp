@@ -13,8 +13,6 @@ const server = new McpServer({
 const apiKey = process.env.B2_APPLICATION_KEY_ID;
 const apiSecret = process.env.B2_APPLICATION_KEY;
 
-const something = "Cursor is for real one of the best AI IDE."
-
 // Global B2 client instance
 let b2Client: B2 | null = null;
 
